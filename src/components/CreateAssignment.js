@@ -1,7 +1,22 @@
 import React, { Component } from 'react'
+import useState from 'react-hook-use-state';
 import reactIs from 'react-is';
 import AssignmentService from '../services/AssignmentService';
 import axios from 'axios';
+
+const initialState ={
+    id: '',
+    asgTitle: '',
+    instrName: '',
+    stdName: '',
+    status:'',
+    idErr:'',
+    asgTitleErr: '',
+    instrNameErr: '',
+    stdNameErr: '',
+    statusErr:''
+}
+
 
 class CreateAssignment extends Component {
     constructor(props) {
@@ -22,11 +37,25 @@ class CreateAssignment extends Component {
         this.onSubmit = this.onSubmit.bind(this);
     }
 
+  
+    state = initialState;
 
     changeIdHandler= (event) => {
         this.setState({id: event.target.value});
-    }
+
+        
+        // const [Id,setId]= useState("");
     
+        //     if(Id.length<6 || Id.length>8){
+        //         alert("Valid ID")
+        //     }
+        //     else{
+        //         alert("ID should be more than 6 characters and less thna 8 characters")
+        //     }
+    
+        //     event.preventDefault()
+        
+    }
     changeTitleHandler= (event) => {
         this.setState({asgTitle: event.target.value});
     }
@@ -43,7 +72,46 @@ class CreateAssignment extends Component {
         this.setState({status: event.target.value});
     }
 
-    
+    //Validation
+    validate = () =>{
+        let idErr = "";
+        let asgTitleErr="";
+        let instrNameErr="";
+        let stdNameErr = "";
+        let statusErr="";
+
+        if(!this.state.id){
+            idErr = "id is required"
+        }
+        if(!this.state.id){
+            asgTitleErr = "Assignment Title is required"
+        }
+        if(!this.state.id){
+            instrNameErr = "Instructor Name is required"
+        }
+        if(!this.state.id){
+            stdNameErr = "Student Name is required"
+        }
+        if(!this.state.id){
+            statusErr = "Status is required"
+        }
+
+        // if(!this.state.id.length<6 || this.state.id.length>8){
+        //         alert("Valid ID")
+        // }
+        // else{
+        //         alert("ID should be more than 6 characters and less thna 8 characters")
+        // }
+
+        if (idErr || asgTitleErr || instrNameErr || stdNameErr || statusErr) {
+            this.setState({ idErr, asgTitleErr, instrNameErr, stdNameErr, statusErr });
+            return false;
+          }
+
+        return true;
+    };
+
+
     onSubmit=event=> {
         event.preventDefault();
 
@@ -62,10 +130,17 @@ class CreateAssignment extends Component {
                 console.log(error.response)
         });
 
+        const isValid = this.validate();
+        if (isValid) {
+            console.log(this.state);
+            // clear form
+            this.setState(initialState);
+        }
 
-
-       
     }
+
+
+
     render() {
         return (
             <div>
@@ -80,28 +155,43 @@ class CreateAssignment extends Component {
                                             <label> Assignment ID: </label>
                                             <input placeholder="Assignment ID" name="id" className="form-control" 
                                                 value={this.state.id} onChange={this.changeIdHandler}/>
+
+                                               <div style={{ fontSize: 12, color: "red" }}>
+                                                    {this.state.idErr}</div>
                                         </div>
+
                                         <div className = "form-group">
                                             <label> Assignment Title: </label>
                                             <input placeholder="Assignment Title" name="title" className="form-control" 
                                                 value={this.state.asgTitle} onChange={this.changeTitleHandler}/>
+                                                <div style={{ fontSize: 12, color: "red" }}>
+                                                    {this.state.asgTitleErr}</div>
                                         </div>
+
                                         <div className = "form-group">
                                             <label> Instructor Name: </label>
                                             <input placeholder="Instructor Name" name="instrName" className="form-control" 
                                                 value={this.state.instrName} onChange={this.changeInstrNameHandler}/>
+                                                <div style={{ fontSize: 12, color: "red" }}>
+                                                    {this.state.instrNameErr}</div>
                                         </div>
+
                                         <div className = "form-group">
                                             <label> Student Name: </label>
                                             <input placeholder="Student Name" name="stdName" className="form-control" 
                                                 value={this.state.stdName} onChange={this.changeStudentNameHander}/>
+                                                <div style={{ fontSize: 12, color: "red" }}>
+                                                    {this.state.stdNameErr}</div>
                                         </div>
+
                                         <div className = "form-group">
                                             <label> Status: </label>
                                             <input placeholder="Status" name="status" className="form-control" 
-                                                value={this.state.status} onChange={this.changeStatusHandler}/>
+                                                value={this.state.statusErr} onChange={this.changeStatusHandler}/>
+                                                <div style={{ fontSize: 12, color: "red" }}>
+                                                    {this.state.statusErr}</div>
                                         </div>
-
+                                        
                                         
                                         <button className="btn btn-success"  onClick={this.onSubmit}>Create</button>
                                        
